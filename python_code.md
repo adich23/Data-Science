@@ -250,12 +250,12 @@ def last_greater(lo, hi, func, val):
 	mid = (lo + hi +1)//2
     
     if func(mid) == True: #if nums[mid] <= val:
-	    lo = mid
+    	lo = mid
     else:
-	    hi = mid-1
+	hi = mid-1
 
     if func(hi) == False:
-	    return -1
+	return -1
     
     return hi
 
@@ -311,6 +311,69 @@ class Solution:
 ### Floyd-Warshal
 
 ### Strongly-Connected Components
+```python
+ def criticalConnections(self, n: int, connections: List[List[int]]) -> List[List[int]]:
+        
+        
+        low = [-1]*n
+        disc = [-1]*n
+        parent = [-1]*n
+        res = []
+        
+        graph = defaultdict(list)
+        
+        for tup in connections:
+            
+            graph[tup[0]].append(tup[1])
+            
+            graph[tup[1]].append(tup[0])
+        
+        self.time = 1
+        for i in range(n):
+            if disc[i] == -1:
+                self.dfs(i, graph, disc, low, res, parent)
+        
+        
+        return res
+                
+                
+    def dfs(self,u, graph, disc, low, res,parent):
+        
+        disc[u] = self.time
+        low[u] = self.time
+        
+        self.time+=1
+        #children=0
+        for v in graph[u]:
+            
+            if disc[v] == -1:
+                parent[v] = u
+                #children+=1
+                self.dfs(v, graph, disc, low, res,parent)
+                
+                low[u] = min(low[u], low[v])
+                
+                if low[v] > disc[u]:
+                # u - v is critical, there is no path for v to reach back to u or previous vertices of u
+                    res.append([u,v])
+                
+                # Articulation Points
+                '''
+                # u is an articulation point in following cases 
+                # (1) u is root of DFS tree and has two or more chilren. 
+                if parent[u] == -1 and children > 1: 
+                    res.append(u)
+  
+                #(2) If u is not root and low value of one of its child is more 
+                # than discovery value of u. 
+                if parent[u] != -1 and low[v] >= disc[u]: 
+                    res.append(u)    
+                '''
+            elif v!= parent[u]:
+                
+                low[u] = min(low[u], disc[v])
+        
+```
 
 ## 5. String Matching
 
